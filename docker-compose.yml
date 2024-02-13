@@ -1,7 +1,7 @@
 version: '3'
 services:
   gp1asix2:
-    image: grup062324/gp1f5asix2_grup06:1.0
+    build: .
     expose:
       - "80"
     environment:
