@@ -1,9 +1,5 @@
 version: '3'
 
-networks:
-    xarxa_gp1f4a11:
-        driver: bridge
-
 services:
   gp1asix2:
     build: .
@@ -11,6 +7,7 @@ services:
       - "80"
     volumes:
       - ./:/var/www/html
+
   lb:
     image: nginx:latest
     volumes:
@@ -18,7 +15,4 @@ services:
     depends_on:
       - gp1asix2
     ports:
-      - "80:8000"
-    networks:
-        - xarxa_gp1f4a11
-
+      - "8000:8000"
