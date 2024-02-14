@@ -1,4 +1,9 @@
 version: '3'
+
+networks:
+    xarxa_gp1f4a11:
+        driver: bridge
+
 services:
   gp1asix2:
     build: .
@@ -6,6 +11,8 @@ services:
       - "80"
     environment:
       - HOST_NAME=desenvolupadorgrup06.fjeclot.net
+    ports:
+      -
   lb:
     image: nginx:latest
     volumes:
@@ -14,4 +21,6 @@ services:
       - gp1asix2
     ports:
       - "80:8000"
+    networks:
+        - xarxa_gp1f4a11
 
