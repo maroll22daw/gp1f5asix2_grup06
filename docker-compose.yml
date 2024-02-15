@@ -4,8 +4,8 @@ services:
     build: .
     expose:
       - "80"
-    environment:
-      - HOST_NAME=desenvolupadorgrup06.fjeclot.net
+    volumes:
+      - ./:/var/www/html
   lb:
     image: nginx:latest
     volumes:
@@ -13,5 +13,5 @@ services:
     depends_on:
       - gp1asix2
     ports:
-      - "80:8000"
+      - "8000:8000"
 
