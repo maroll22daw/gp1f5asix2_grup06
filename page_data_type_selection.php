@@ -1,19 +1,18 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Selección de Tipo de Datos</title>
-</head>
-<body>
-    <h1>Seleccione el tipo de datos</h1>
-    <form method="post" action="process.php">
-        <label for="data_type">Seleccione el tipo de datos:</label>
-        <select name="data_type" required>
-            <option value="basic">Datos Básicos</option>
-            <option value="advanced">Datos Avanzados</option>
-        </select><br>
-        <button type="submit">Aceptar</button>
-    </form>
+<?php include 'header.php';?>
+
+    <div class="container mt-5 bg-dark text-white p-4 rounded">
+        <h1>Seleccione el tipo de datos</h1>
+        <form method="post" action="process.php">
+            <div>
+                <label for="data_type">Seleccione el tipo de datos:</label>
+                <select name="data_type" required>
+                    <option value="basic">Datos Básicos</option>
+                    <option value="advanced">Datos Avanzados</option>
+                </select>
+            </div>
+            
+            <button class="btn btn-primary" type="submit">Aceptar</button>
+        </form>
+    </div>
 </body>
 </html>

@@ -1,13 +1,5 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <title>Document</title>
-</head>
-<body>
-    <a href="index.php"><button type="submit" class=" button2 btn btn-primary ">Inici</button></a>
+<?php include 'header.php'; ?>
+    
 </body>
 </html>
 
@@ -23,93 +15,101 @@ if (isset($_POST['client-name'])) {
 
 function mostrarFicheroBasico()
 {
-    // Recoger los datos del formulario
-
-    $authorative = $_POST['authorative'];
-    $ddns_update_style = $_POST['ddns_update_style'];
-    $domain_name = $_POST['domain_name'];
-    $domain_name_servers = $_POST['domain_name_servers'];
-    $option_routers = $_POST['option_routers'];
-    $default_lease_time = $_POST['default_lease_time'];
-    $max_lease_time = $_POST['max_lease_time'];
+    $ddns_update_style_options = ['ad-hoc', 'interim', 'standard', 'none'];
+    $ddns_update_style = isset($_POST['ddns-update-style']) && in_array($_POST['ddns-update-style'], $ddns_update_style_options)
+        ? $_POST['ddns-update-style']
+        : 'none';
+    $default_lease_time = $_POST['default-lease-time'];
+    $max_lease_time = $_POST['max-lease-time'];
+    $authorative = (isset($_POST['authorative']) && $_POST['authorative'] === 'authorative') ? 'authorative;' : '';
+    
     $subnet = $_POST['subnet'];
-    $mask = $_POST['mask']; 
-    $range = $_POST['range'];
-    $fichero_dhcp = "
-    <div class='file'>
-    #dhcpd.conf <br>
-    #<br>
-    #<br>
-    ddns-update-style  $ddns_update_style;<br>
-    option routers  $option_routers;<br>
-    default-lease-time $default_lease_time;<br>
-    max-lease-time $max_lease_time;<br>
-    option domain-name $domain_name;
-    subnet $subnet netmask $mask {<br>
-    &emsp;&emsp;range $range;<br>
-    &emsp;&emsp;default-lease-time $default_lease_time;<br>
-    &emsp;&emsp;max-lease-time $max_lease_time;<br>
-    }<br>
-    </div>
-    "; 
-    echo "<h1>El fichero dhcpd.conf tendría la siguiente estructura</h1>"; 
-    echo "$fichero_dhcp"; 
+    $mask = $_POST['mask'];
+    $rangeInicial = $_POST['range-start'];
+    $rangeFinal = $_POST['range-end'];
+    $submask = $_POST['submask'];
+    $option_routers = $_POST['gateway'];
+    $domain_name_servers = $_POST['domain-name-servers'];
+    $domain_name = $_POST['domain_name'];
 
+    $fichero_dhcp = "
+        <div class='contentBasicForm'>
+        <h1>Configuració DHCP - Simple</h1>
+        <div class='file'>
+        # Archivo de configuración del servidor DHCP<br>
+        # Configuración global<br><br>
+        ddns-update-style  $ddns_update_style;<br>
+        default-lease-time $default_lease_time;<br>
+        max-lease-time $max_lease_time;<br>
+        $authorative<br>
+
+        subnet $subnet netmask $mask {<br>
+        &emsp;&emsp;range $rangeInicial $rangeFinal;<br>
+        &emsp;&emsp;subnet-mask $submask;<br>
+        &emsp;&emsp;option routers $option_routers;<br>
+        &emsp;&emsp;option domain-name-servers $domain_name_servers;<br>
+        &emsp;&emsp;option domain-name $domain_name;<br>
+        }
+        <br>
+        </div>
+        </div>
+        ";
+    echo "$fichero_dhcp";
 
 }
 
 function mostrarFicheroAvanzado()
 {
-    $authorative = $_POST['authorative'];
-    $ddns_update_style = $_POST['ddns_update_style'];
-    $domain_name = $_POST['domain_name'];
-    $domain_name_servers = $_POST['domain_name_servers'];
-    $option_routers = $_POST['gateway'];
+    $ddns_update_style_options = ['ad-hoc', 'interim', 'standard', 'none'];
+    $ddns_update_style = isset($_POST['ddns-update-style']) && in_array($_POST['ddns-update-style'], $ddns_update_style_options)
+        ? $_POST['ddns-update-style']
+        : 'none';
     $default_lease_time = $_POST['default-lease-time'];
     $max_lease_time = $_POST['max-lease-time'];
+    $authorative = (isset($_POST['authorative']) && $_POST['authorative'] === 'authorative') ? 'authorative;' : '';
+    
     $subnet = $_POST['subnet'];
-    $mask = $_POST['mask']; 
+    $mask = $_POST['mask'];
     $rangeInicial = $_POST['range-start'];
-    $rangeFinal = $_POST['range-end']; 
+    $rangeFinal = $_POST['range-end'];
+    $submask = $_POST['submask'];
+    $option_routers = $_POST['gateway'];
+    $domain_name_servers = $_POST['domain-name-servers'];
+    $domain_name = $_POST['domain_name'];
+    
     $host = $_POST['client-name'];
     $hardware_ethernet = $_POST['mac-address'];
     $fixed_address = $_POST['ip-address'];
-    $type = $_POST['type']; 
+
     $fichero_dhcp_avanzado = "
-    <div class='file'>
-    #dhcpd.conf <br>
-    #<br>
-    #<br>
-    ddns-update-style  $ddns_update_style;<br>
-    option routers  $option_routers;<br>
-    default-lease-time $default_lease_time;<br>
-    max-lease-time $max_lease_time;<br>
-    option domain-name $domain_name;<br>
-    subnet $subnet netmask $mask; {<br>
-    &emsp;&emsp;range $rangeInicial $rangeFinal;<br>
-    &emsp;&emsp;default-lease-time $default_lease_time;<br>
-    &emsp;&emsp;max-lease-time $max_lease_time;<br><br>
-    &emsp;host $host; {<br>
-    &emsp;&emsp; hardware ethernet $hardware_ethernet;<br>
-    &emsp;&emsp; fixed-address $fixed_address;<br>
-    &emsp;&emsp; $type unknown-clients;
-    &emsp;}<br>
-    }
-    <br>
-    </div>
-    "; 
-    echo "$fichero_dhcp_avanzado"; 
+        <div class='contentBasicForm'>
+        <h1>Configuració DHCP - Avançat</h1>
+        <div class='file'>
+        # Archivo de configuración del servidor DHCP<br>
+        # Configuración global<br><br>
+        ddns-update-style  $ddns_update_style;<br>
+        default-lease-time $default_lease_time;<br>
+        max-lease-time $max_lease_time;<br>
+        $authorative<br>
+
+        subnet $subnet netmask $mask {<br>
+        &emsp;&emsp;range $rangeInicial $rangeFinal;<br>
+        &emsp;&emsp;subnet-mask $submask;<br>
+        &emsp;&emsp;option routers $option_routers;<br>
+        &emsp;&emsp;option domain-name-servers $domain_name_servers;<br>
+        &emsp;&emsp;option domain-name $domain_name;<br>
+
+        &emsp;&emsp;host $host {<br>
+        &emsp;&emsp;&emsp;&emsp; hardware ethernet $hardware_ethernet;<br>
+        &emsp;&emsp;&emsp;&emsp; fixed-address $fixed_address;<br>
+        &emsp;&emsp;}<br>
+        }
+        <br>
+        </div>
+        </div>
+        ";
+    echo "$fichero_dhcp_avanzado";
 
 }
 
-// <input type="checkbox" name="demoCheckBox" value="1">
-/*
-if ($_POST['demoCheckBox']) {
-   // Checkbox is checked
-   // Perform actions or logic for checked checkbox
-} else {
-   // Checkbox is not checked
-   // Perform actions or logic for unchecked checkbox
-}
-*/
 ?>

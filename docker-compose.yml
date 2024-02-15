@@ -1,13 +1,11 @@
 version: '3'
-
 services:
   gp1asix2:
     build: .
     expose:
       - "80"
-    volumes:
-      - ./:/var/www/html
-
+    environment:
+      - HOST_NAME=desenvolupadorgrup06.fjeclot.net
   lb:
     image: nginx:latest
     volumes:
@@ -15,4 +13,5 @@ services:
     depends_on:
       - gp1asix2
     ports:
-      - "8000:8000"
+      - "80:8000"
+
